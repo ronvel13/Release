@@ -98,6 +98,7 @@ class ServerManager: NSObject {
                           "offset":     offset,
                           "fields":     "photo_50",
                           "name_case":  "nom",
+                          "v":          "5.73",
                           "access_token": accessToken.token!] as [String : Any]
        
         request("https://api.vk.com/method/friends.get", method: .get, parameters: dictionary).responseJSON {
@@ -105,7 +106,7 @@ class ServerManager: NSObject {
             switch response.result {
             case .success(_) :
                 var persons = Array<Person>()
-                let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
+                let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
                 for arr in array! {
                     let person = Person(arr: arr)
                     persons.append(person)
@@ -121,12 +122,11 @@ class ServerManager: NSObject {
                                 onSuccess: @escaping (_ user : User) -> Void,
                                 onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
         
-        let group = DispatchGroup()
-        group.enter()
         var user = User()
         let dictionary = ["user_ids":    userId,
                           "fields":     "photo_200,city,sex,bdate,city,country,online,education,counters",
                           "name_case":  "nom",
+                          "v":          "5.73",
                           "access_token": accessToken.token!] as [String : Any]
         
         request("https://api.vk.com/method/users.get", method: .get, parameters: dictionary).responseJSON {
@@ -138,81 +138,21 @@ class ServerManager: NSObject {
                     
                     user = User(arr: arr)
                     
-                    self.getCityUser(
-                        cityId: String((arr["city"] as? Int) ?? -1),
-                        onSuccess: { (cityName) in
-                            user.cityName = cityName
-                            self.getCountryUser(
-                                coutryId: String((arr["country"] as? Int) ?? -1),
-                                onSuccess: { (countryName) in
-                                    user.countryName = countryName
-                                    group.leave()
-                            }) { (error: Error, statusCode: NSInteger) in
-                                print("error = \(error.localizedDescription), code = \(statusCode)")
-                            }
-                    }) { (error: Error, statusCode: NSInteger) in
-                        print("error = \(error.localizedDescription), code = \(statusCode)")
+                    if let city = arr["city"] as? [String: Any] {
+                        user.cityName = city["title"]! as? String
                     }
+                    
+                    if let country = arr["country"] as? [String: Any] {
+                        user.countryName = country["title"]! as? String
+                    }
+                  
                 }
-                //onSuccess(user)
+                onSuccess(user)
             case .failure(let error) :
                 onFailure(error, (response.response?.statusCode)!)
             }
         }
         
-        group.notify(queue: DispatchQueue.main) {
-            onSuccess(user)
-        }
-    }
-    
-    public func getCityUser(cityId: String,
-                         onSuccess: @escaping (_ city : String) -> Void,
-                         onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
-        if cityId != "-1" {
-            let dictionary = ["city_ids": cityId,
-                              "access_token": accessToken.token!] as [String : Any]
-            
-            request("https://api.vk.com/method/database.getCitiesById", method: .get, parameters: dictionary).responseJSON {
-                (response) in
-                switch response.result {
-                case .success(_) :
-                    var city = ""
-                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
-                    for  arr in array! {
-                        city = arr["name"] as! String
-                    }
-                    onSuccess(city)
-                case .failure(let error) :
-                    onFailure(error, (response.response?.statusCode)!)
-                }
-            }
-        } else { onSuccess("") }
-    }
-    
-    public func getCountryUser(coutryId: String,
-                            onSuccess: @escaping (_ country : String) -> Void,
-                            onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
-        if coutryId != "-1" {
-            let dictionary = ["country_ids": coutryId,
-                              "access_token": accessToken.token!] as [String : Any]
-     
-            request("https://api.vk.com/method/database.getCountriesById", method: .get, parameters: dictionary).responseJSON {
-                (response) in
-                switch response.result {
-                case .success(_) :
-                    var country = ""
-                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
-                    
-                    for  arr in array! {
-                        country = arr["name"] as! String
-                    }
-                    
-                    onSuccess(country)
-                case .failure(let error) :
-                    onFailure(error, (response.response?.statusCode)!)
-                }
-            }
-        } else { onSuccess("") }
     }
     
     public func getWallPostsWithOffset(offset: NSInteger,
@@ -226,6 +166,7 @@ class ServerManager: NSObject {
                           "offset":     offset,
                           "filter":     "all",
                           "extended":   "1",
+                          "v":           "5.73",
                           "access_token": accessToken.token!] as [String : Any]
         
         request("https://api.vk.com/method/wall.get", method: .get, parameters: dictionary).responseJSON {

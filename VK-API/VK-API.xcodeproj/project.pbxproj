@@ -25,7 +25,7 @@
 		3937E743203C749600AD3F9C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E742203C749600AD3F9C /* ViewController.swift */; };
 		3937E745203C761E00AD3F9C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E744203C761E00AD3F9C /* LoginViewController.swift */; };
 		3937E747203C796D00AD3F9C /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E746203C796D00AD3F9C /* AccessToken.swift */; };
-		7EC6A2F648102352385DBEC1 /* Pods_VK_API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976231335B75C1859A038FA /* Pods_VK_API.framework */; };
+		7EC6A2F648102352385DBEC1 /* Pods_VK_API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976231335B75C1859A038FA /* Pods_VK_API.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

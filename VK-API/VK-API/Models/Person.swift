@@ -20,6 +20,6 @@ class Person: NSObject {
         firstName   = arr["first_name"] as! String
         lastName    = arr["last_name"]  as! String
         photo_50    = arr["photo_50"]   as? String
-        user_id     = String(arr["user_id"]    as! Int)
+        user_id     = String(arr["id"]    as! Int)
     }
 }

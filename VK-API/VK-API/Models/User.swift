@@ -23,7 +23,7 @@ class User: NSObject {
         
         self.firstName      = arr["first_name"] as? String
         self.lastName       = arr["last_name"]  as? String
-        self.userId         = String(arr["uid"]  as! Int)
+        self.userId         = String(arr["id"]  as! Int)
         self.photoURL       = arr["photo_200"]  as? String
         self.universityName = arr["university_name"]  as? String
         self.onlineStatus   = arr["online"]  as? Bool

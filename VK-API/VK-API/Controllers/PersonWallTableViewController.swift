@@ -87,17 +87,16 @@ class PersonWallTableViewController: UITableViewController {
         }
         
         var information : String = ""
+        cell?.informationAboutUser.text = information
         if let country = userInformation.countryName {
             information += country
             if let city = userInformation.cityName {
                 information += information == "" ? " " : ", "
                 information += city
+                cell?.informationAboutUser.text = information
             }
         } else if let city = userInformation.cityName {
             information += city
-        }
-        
-        if information != "" {
             cell?.informationAboutUser.text = information
         }
         

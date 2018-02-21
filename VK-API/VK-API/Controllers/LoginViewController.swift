@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class LoginViewController: UIViewController, UIWebViewDelegate {
 
@@ -54,8 +55,6 @@ class LoginViewController: UIViewController, UIWebViewDelegate {
 
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
-        print(request.url?.description)
-        print("/n")
         if ((request.url?.description.range(of: "#access_token=")) != nil) {
             let token = AccessToken()
             
