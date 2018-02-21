@@ -12,7 +12,7 @@ import Alamofire
 class PersonWallTableViewController: UITableViewController {
 
     var userID = ""
-    let postsCount = 10
+    let postsCount = 2
     var userInformation = User()
     var wallInformation = Array<Wall>()
     @IBOutlet var tableViewWall: UITableView!

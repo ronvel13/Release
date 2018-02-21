@@ -11,9 +11,80 @@ import Alamofire
 
 class ServerManager: NSObject {
     
+    var accessToken = AccessToken()
+    let keyToken = "keyToken"
+    let keyExpirationDate = "keyExpirationDate"
+    let keyUserId = "keyUserId"
+    
     static func sharedManager() -> ServerManager {
         let manager = ServerManager()
         return manager
+    }
+    
+    override init() {
+        super.init()
+        loadSettings()
+    }
+    
+    func loadSettings() {
+    
+        let userDefaults = UserDefaults.standard
+        self.accessToken.token = userDefaults.object(forKey: keyToken) as? String
+        self.accessToken.expirationDate = userDefaults.object(forKey: keyExpirationDate) as? Date
+        self.accessToken.userId = userDefaults.object(forKey: keyUserId) as? String
+    }
+    
+    func saveSettings(token : AccessToken ) {
+    
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(token.token, forKey: keyToken)
+        userDefaults.set(token.expirationDate, forKey: keyExpirationDate)
+        userDefaults.set(token.userId, forKey: keyUserId)
+        userDefaults.synchronize()
+    }
+    
+    func authorizeUser(user: User,
+                       completion: @escaping (_ token : AccessToken?) -> Void) {
+        
+        if self.accessToken.expirationDate?.compare(Date.init()) == .orderedDescending {
+            
+            self.getUserInformation(userId: accessToken.userId!, onSuccess: { (user) in
+                if completion != nil {
+                    completion(self.accessToken)
+                }
+            }, onFailure: { (error, statusCode) in
+                if completion != nil {
+                    completion(nil)
+                }
+            })
+        } else {
+        
+        
+            let a = LoginViewController()
+            let viewController = a.initWithCompletionBlock { (token) in
+
+                self.saveSettings(token: token!)
+                self.accessToken = token!
+                
+                if token != nil {
+                    self.getUserInformation(userId: self.accessToken.userId!, onSuccess: { (user) in
+                        if completion != nil {
+                            completion(self.accessToken)
+                        }
+                    }, onFailure: { (error, statusCode) in
+                        if completion != nil {
+                            completion(nil)
+                        }
+                    })
+                } else if (completion != nil) {
+                    completion(nil)
+                }
+            }
+          
+            let navigation = UINavigationController.init(rootViewController: viewController)
+            let mainViewController = UIApplication.shared.windows.first?.rootViewController
+            mainViewController?.present(navigation, animated: true, completion: nil)
+        }
     }
     
     public func getFriendsWithOffset(offset: NSInteger,
@@ -21,12 +92,13 @@ class ServerManager: NSObject {
                                   onSuccess: @escaping (_ friends : Array<Person>) -> Void,
                                   onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
             //60054215 // 222754621
-        let dictionary = ["user_id":    "222754621",
+        let dictionary = ["user_id":    accessToken.userId!,
                           "order":      "name",
                           "count":      count,
                           "offset":     offset,
                           "fields":     "photo_50",
-                          "name_case":  "nom"] as [String : Any]
+                          "name_case":  "nom",
+                          "access_token": accessToken.token!] as [String : Any]
        
         request("https://api.vk.com/method/friends.get", method: .get, parameters: dictionary).responseJSON {
             (response) in
@@ -54,7 +126,8 @@ class ServerManager: NSObject {
         var user = User()
         let dictionary = ["user_ids":    userId,
                           "fields":     "photo_200,city,sex,bdate,city,country,online,education,counters",
-                          "name_case":  "nom"] as [String : Any]
+                          "name_case":  "nom",
+                          "access_token": accessToken.token!] as [String : Any]
         
         request("https://api.vk.com/method/users.get", method: .get, parameters: dictionary).responseJSON {
             (response) in
@@ -96,7 +169,8 @@ class ServerManager: NSObject {
                          onSuccess: @escaping (_ city : String) -> Void,
                          onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
         if cityId != "-1" {
-            let dictionary = ["city_ids": cityId] as [String : Any]
+            let dictionary = ["city_ids": cityId,
+                              "access_token": accessToken.token!] as [String : Any]
             
             request("https://api.vk.com/method/database.getCitiesById", method: .get, parameters: dictionary).responseJSON {
                 (response) in
@@ -119,7 +193,8 @@ class ServerManager: NSObject {
                             onSuccess: @escaping (_ country : String) -> Void,
                             onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
         if coutryId != "-1" {
-            let dictionary = ["country_ids": coutryId] as [String : Any]
+            let dictionary = ["country_ids": coutryId,
+                              "access_token": accessToken.token!] as [String : Any]
      
             request("https://api.vk.com/method/database.getCountriesById", method: .get, parameters: dictionary).responseJSON {
                 (response) in
@@ -149,13 +224,15 @@ class ServerManager: NSObject {
         let dictionary = ["owner_id":   userId,
                           "count":      count,
                           "offset":     offset,
-                          "filter":     "all"] as [String : Any]
+                          "filter":     "all",
+                          "extended":   "1",
+                          "access_token": accessToken.token!] as [String : Any]
         
         request("https://api.vk.com/method/wall.get", method: .get, parameters: dictionary).responseJSON {
             (response) in
             switch response.result {
             case .success(_) :
-                var persons = Array<Person>()
+                let persons = Array<Person>()
                 let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
                 for arr in array! {
                    
