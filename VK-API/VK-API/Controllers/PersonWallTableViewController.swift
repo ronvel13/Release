@@ -14,6 +14,7 @@ class PersonWallTableViewController: UITableViewController {
     var userID = ""
     let postsCount = 2
     var userInformation = User()
+    var userCounters = UserCounters()
     var wallInformation = Array<Wall>()
     @IBOutlet var tableViewWall: UITableView!
     let manager = ServerManager.sharedManager()
@@ -32,8 +33,9 @@ class PersonWallTableViewController: UITableViewController {
     func getUserInformation() {
         
         manager.getUserInformation(userId: userID,
-                                   onSuccess: { (userInformation) in
+                                   onSuccess: { userInformation, userCounters  in
                                     self.userInformation = userInformation
+                                    self.userCounters = userCounters
                                     //self.getWallPostsInformation()
                                     self.tableView.reloadData()
         }) { (error: Error, statusCode: NSInteger) in
@@ -57,7 +59,7 @@ class PersonWallTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -68,60 +70,83 @@ class PersonWallTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let identifier = "infocell"
-        //if (indexPath.row == 0 && indexPath.section == 0) {
-        var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? UserFriendTableViewCell
+        let identifier = "infoCell"
+        let counterCellIdentifier = "counterCell"
+        
+        if  indexPath.section == 0 {
+            var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? UserFriendTableViewCell
             
-        if cell == nil {
-            cell = UserFriendTableViewCell.init(style: .default, reuseIdentifier: identifier)
-        }
-        
-        if let firstName = userInformation.firstName {
-            if let lastName = userInformation.lastName {
-                cell?.name.text = firstName + " " + lastName
+            if cell == nil {
+                cell = UserFriendTableViewCell.init(style: .default, reuseIdentifier: identifier)
             }
-        }
-        
-        if let onlineStatus = userInformation.onlineStatus {
-            cell?.isOnline.text = onlineStatus ? "Online" : "Offline"
-        }
-        
-        var information : String = ""
-        cell?.informationAboutUser.text = information
-        if let country = userInformation.countryName {
-            information += country
-            if let city = userInformation.cityName {
-                information += information == "" ? " " : ", "
+            
+            if let firstName = userInformation.firstName {
+                if let lastName = userInformation.lastName {
+                    cell?.name.text = firstName + " " + lastName
+                }
+            }
+            
+            if let onlineStatus = userInformation.onlineStatus {
+                cell?.isOnline.text = onlineStatus ? "Online" : "Offline"
+            }
+            
+            var information : String = ""
+            cell?.informationAboutUser.text = information
+            if let country = userInformation.countryName {
+                information += country
+                if let city = userInformation.cityName {
+                    information += information == "" ? " " : ", "
+                    information += city
+                    cell?.informationAboutUser.text = information
+                }
+            } else if let city = userInformation.cityName {
                 information += city
                 cell?.informationAboutUser.text = information
             }
-        } else if let city = userInformation.cityName {
-            information += city
-            cell?.informationAboutUser.text = information
+            
+            if let photo = userInformation.photoURL {
+                request(photo).response(completionHandler: { (response) in
+                    guard
+                        let data = response.data,
+                        let image = UIImage(data: data)
+                        else { return }
+                    
+                    cell?.photoUser.image = image
+                    
+                    let imageLayer = cell?.photoUser.layer;
+                    imageLayer?.cornerRadius = 50
+                    imageLayer?.masksToBounds = true
+                    
+                    cell?.layoutSubviews()
+                })
+            }
+            return cell!
+        } else if indexPath.section == 1 {
+            var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? CountersTableViewCell
+            
+            if cell == nil {
+                cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
+            }
+            //let cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
+            
+            if self.userCounters.friends != nil {
+                cell?.counters = self.userCounters
+            }
+            //cell.delegete = self
+            
+            return cell!
         }
-        
-        if let photo = userInformation.photoURL {
-            request(photo).response(completionHandler: { (response) in
-                guard
-                    let data = response.data,
-                    let image = UIImage(data: data)
-                    else { return }
-                
-                cell?.photoUser.image = image
-                
-                let imageLayer = cell?.photoUser.layer;
-                imageLayer?.cornerRadius = 50
-                imageLayer?.masksToBounds = true
-                
-                cell?.layoutSubviews()
-            })
-        }
-        return cell!
-        //}
+        return UITableViewCell.init()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
+        
+        switch (indexPath.section) {
+        case 0: return 120;
+        case 1: return 60;
+        default:
+            return 0
+        }
     }
     
 

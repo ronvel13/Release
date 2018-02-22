@@ -82,10 +82,7 @@ class ViewController: UITableViewController {
             
             let imageLayer = cell?.imageView?.layer;
             imageLayer?.cornerRadius = 25
-            //imageLayer?.borderWidth = 1
-            //imageLayer?.borderColor = UIColor.gray.cgColor
             imageLayer?.masksToBounds = true
-
             cell?.layoutSubviews()
         })
         

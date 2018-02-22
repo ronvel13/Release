@@ -48,7 +48,7 @@ class ServerManager: NSObject {
         
         if self.accessToken.expirationDate?.compare(Date.init()) == .orderedDescending {
             
-            self.getUserInformation(userId: accessToken.userId!, onSuccess: { (user) in
+            self.getUserInformation(userId: accessToken.userId!, onSuccess: { user, counters  in
                 if completion != nil {
                     completion(self.accessToken)
                 }
@@ -67,7 +67,7 @@ class ServerManager: NSObject {
                 self.accessToken = token!
                 
                 if token != nil {
-                    self.getUserInformation(userId: self.accessToken.userId!, onSuccess: { (user) in
+                    self.getUserInformation(userId: self.accessToken.userId!, onSuccess: { user, counters in
                         if completion != nil {
                             completion(self.accessToken)
                         }
@@ -119,10 +119,13 @@ class ServerManager: NSObject {
     }
     
     public func getUserInformation(userId: String,
-                                onSuccess: @escaping (_ user : User) -> Void,
+                                   onSuccess: @escaping (_ user : User, _ counters : UserCounters) -> Void,
                                 onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
         
+        //let group = DispatchGroup()
+        //group.enter()
         var user = User()
+        var counters = UserCounters()
         let dictionary = ["user_ids":    userId,
                           "fields":     "photo_200,city,sex,bdate,city,country,online,education,counters",
                           "name_case":  "nom",
@@ -145,15 +148,89 @@ class ServerManager: NSObject {
                     if let country = arr["country"] as? [String: Any] {
                         user.countryName = country["title"]! as? String
                     }
-                  
+                    
+                    if let count = arr["counters"] as? [String: Any] {
+                        counters = UserCounters(arr: count)
+                    }
+                    
+                   /* self.getCityUser(
+                        cityId: String((arr["city"] as? Int) ?? -1),
+                        onSuccess: { (cityName) in
+                            user.cityName = cityName
+                            self.getCountryUser(
+                                coutryId: String((arr["country"] as? Int) ?? -1),
+                                onSuccess: { (countryName) in
+                                    user.countryName = countryName
+                                    group.leave()
+                            }) { (error: Error, statusCode: NSInteger) in
+                                print("error = \(error.localizedDescription), code = \(statusCode)")
+                            }
+                    }) { (error: Error, statusCode: NSInteger) in
+                        print("error = \(error.localizedDescription), code = \(statusCode)")
+                    }*/
                 }
-                onSuccess(user)
+                onSuccess(user, counters)
             case .failure(let error) :
                 onFailure(error, (response.response?.statusCode)!)
             }
         }
         
+       /* group.notify(queue: DispatchQueue.main) {
+            onSuccess(user)
+        }*/
     }
+    
+  /*  public func getCityUser(cityId: String,
+                         onSuccess: @escaping (_ city : String) -> Void,
+                         onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        if cityId != "-1" {
+            let dictionary = ["city_ids": cityId,
+                              "v":        "5.73",
+                              "access_token": accessToken.token!] as [String : Any]
+            
+            request("https://api.vk.com/method/database.getCitiesById", method: .get, parameters: dictionary).responseJSON {
+                (response) in
+                switch response.result {
+                case .success(_) :
+                    var city = ""
+                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
+                    for  arr in array! {
+                        city = arr["name"] as! String
+                    }
+                    onSuccess(city)
+                case .failure(let error) :
+                    onFailure(error, (response.response?.statusCode)!)
+                }
+            }
+        } else { onSuccess("") }
+    }
+    
+    public func getCountryUser(coutryId: String,
+                            onSuccess: @escaping (_ country : String) -> Void,
+                            onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        if coutryId != "-1" {
+            let dictionary = ["country_ids": coutryId,
+                              "v":           "5.73",
+                              "access_token": accessToken.token!] as [String : Any]
+     
+            request("https://api.vk.com/method/database.getCountriesById", method: .get, parameters: dictionary).responseJSON {
+                (response) in
+                switch response.result {
+                case .success(_) :
+                    var country = ""
+                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
+                    
+                    for  arr in array! {
+                        country = arr["name"] as! String
+                    }
+                    
+                    onSuccess(country)
+                case .failure(let error) :
+                    onFailure(error, (response.response?.statusCode)!)
+                }
+            }
+        } else { onSuccess("") }
+    }*/
     
     public func getWallPostsWithOffset(offset: NSInteger,
                                        count: NSInteger,

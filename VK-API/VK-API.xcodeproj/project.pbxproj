@@ -25,6 +25,8 @@
 		3937E743203C749600AD3F9C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E742203C749600AD3F9C /* ViewController.swift */; };
 		3937E745203C761E00AD3F9C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E744203C761E00AD3F9C /* LoginViewController.swift */; };
 		3937E747203C796D00AD3F9C /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E746203C796D00AD3F9C /* AccessToken.swift */; };
+		3937E749203DD9F000AD3F9C /* CountersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E748203DD9F000AD3F9C /* CountersTableViewCell.swift */; };
+		3937E74B203DE1B000AD3F9C /* UserCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E74A203DE1B000AD3F9C /* UserCounters.swift */; };
 		7EC6A2F648102352385DBEC1 /* Pods_VK_API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976231335B75C1859A038FA /* Pods_VK_API.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
@@ -71,6 +73,8 @@
 		3937E742203C749600AD3F9C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		3937E744203C761E00AD3F9C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3937E746203C796D00AD3F9C /* AccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
+		3937E748203DD9F000AD3F9C /* CountersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountersTableViewCell.swift; sourceTree = "<group>"; };
+		3937E74A203DE1B000AD3F9C /* UserCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCounters.swift; sourceTree = "<group>"; };
 		644EE22FF8798A27E0D989B9 /* Pods_VK_APIUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_APIUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9292CBF8B2539F6CC1ECFDF6 /* Pods-VK-API.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-API.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-API/Pods-VK-API.debug.xcconfig"; sourceTree = "<group>"; };
 		B3EEE1A75C130CC22EB92004 /* Pods-VK-APIUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-APIUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-APIUITests/Pods-VK-APIUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -169,6 +173,7 @@
 				391CBB34203C38BE005704D6 /* User.swift */,
 				391CBB36203C38C2005704D6 /* Person.swift */,
 				3937E746203C796D00AD3F9C /* AccessToken.swift */,
+				3937E74A203DE1B000AD3F9C /* UserCounters.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				391CBB3F203C3912005704D6 /* UserFriendTableViewCell.swift */,
+				3937E748203DD9F000AD3F9C /* CountersTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -514,9 +520,11 @@
 				391CBB3E203C3909005704D6 /* NavigationController.swift in Sources */,
 				391CBB35203C38BE005704D6 /* User.swift in Sources */,
 				391CBB3C203C3903005704D6 /* PersonWallTableViewController.swift in Sources */,
+				3937E74B203DE1B000AD3F9C /* UserCounters.swift in Sources */,
 				391CBB40203C3912005704D6 /* UserFriendTableViewCell.swift in Sources */,
 				391CBB33203C38B9005704D6 /* Wall.swift in Sources */,
 				391CBB3A203C38FC005704D6 /* ServerManager.swift in Sources */,
+				3937E749203DD9F000AD3F9C /* CountersTableViewCell.swift in Sources */,
 				3937E745203C761E00AD3F9C /* LoginViewController.swift in Sources */,
 				391CBB05203C389B005704D6 /* AppDelegate.swift in Sources */,
 				3937E747203C796D00AD3F9C /* AccessToken.swift in Sources */,
