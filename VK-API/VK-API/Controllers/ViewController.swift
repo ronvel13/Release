@@ -15,15 +15,26 @@ class ViewController: UITableViewController {
     let friendsInRequest = 50
     var loadingData = true
     var userMain = User()
+    var user = User()
+    var isAuthorized = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadingData = true
-        var manager = ServerManager()
-        manager.authorizeUser(user: userMain, completion: { (token) in
-            print("AUTHORIZED!");
-            self.getFriendsFromServer()
-        })
+        let manager = ServerManager()
+        if !isAuthorized {
+            let queue = DispatchQueue(label: "com.myapp.queue")
+            queue.async {
+                DispatchQueue.main.async {
+                    manager.authorizeUser(user: self.userMain, completion: { (token) in
+                        self.isAuthorized = true
+                        self.getFriendsFromServer(userId: (token?.userId)!)
+                    })
+                }
+            }
+        } else {
+            self.getFriendsFromServer(userId: userMain.userId!)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,24 +42,17 @@ class ViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func getFriendsFromServer() {
+    func getFriendsFromServer(userId: String) {
         
         let manager = ServerManager.sharedManager()
         
         manager.getFriendsWithOffset(offset: friends.count,
             count: friendsInRequest,
+            userId: userId,
             onSuccess: { (friends) in
                 self.friends += friends
                 if friends.count > 0 {
                     self.tableView.reloadData()
-                    /*var newPaths = [IndexPath]()
-                    
-                    for i in (self.friends.count - friends.count)..<self.friends.count {
-                        newPaths.append(IndexPath(row: i, section: 0))
-                    }
-                    self.tableView.beginUpdates()
-                    self.tableView.insertRows(at: newPaths, with: .fade)
-                    self.tableView.endUpdates()*/
                     self.loadingData = false
                 }
             
@@ -98,7 +102,7 @@ class ViewController: UITableViewController {
         if ((scrollView.contentOffset.y + scrollView.frame.size.height) >= scrollView.contentSize.height) {
             if !loadingData {
                 loadingData = true
-                getFriendsFromServer()
+                getFriendsFromServer(userId: userMain.userId!)
             }
         }
     }
@@ -109,8 +113,7 @@ class ViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if (segue.identifier == "PersonMain") {
-            
+        if segue.identifier == "PersonMain" {
             let indexPath = self.tableView.indexPath(for: sender as! UITableViewCell)
             let friend = self.friends[(indexPath?.row)!]
             let dest : PersonWallTableViewController = segue.destination as! PersonWallTableViewController

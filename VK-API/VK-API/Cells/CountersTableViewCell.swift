@@ -10,13 +10,14 @@ import UIKit
 
 class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    var delegate : CountersDelegate?
     var counters = UserCounters()
     var countCell = 0
     var flag = [false, false, false, false, false, false, false]
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         //layout.minimumInteritemSpacing = 2.f;
@@ -24,7 +25,7 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
         
         let insets = UIEdgeInsetsMake(0, 2, 0, 2)
         layout.sectionInset = insets
-        let collectionView = UICollectionView.init(frame: CGRect.init(x: 0, y: 0, width: cellWidth(), height: 44), collectionViewLayout: layout)
+        let collectionView = UICollectionView.init(frame: CGRect.init(x: 0, y: 0, width: cellWidth(), height: 50), collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
@@ -54,8 +55,8 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
         
         counerCell.backgroundColor = .clear
         
-        let nameLabel = UILabel.init(frame: CGRect(x: 0, y: 30, width: 80, height: 20))
-        let countLabel = UILabel.init(frame: CGRect(x: 0, y: 10, width: 80, height: 20))
+        let nameLabel = UILabel.init(frame: CGRect(x: 0, y: 34, width: 80, height: 15))
+        let countLabel = UILabel.init(frame: CGRect(x: 0, y: 14, width: 80, height: 15))
         
         nameLabel.textAlignment = .center
         countLabel.textAlignment = .center
@@ -136,19 +137,24 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize.init(width: 80, height: 50)
+        return CGSize.init(width: 80, height: 44)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        self.delegate?.collectionCellPressedAtIndex(indexPath: indexPath)
+    }
+
     func cellWidth() -> CGFloat {
-    return UIScreen.main.bounds.width
+        return UIScreen.main.bounds.width
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func awakeFromNib() {
-        //super.awakeFromNib()
+        super.awakeFromNib()
         // Initialization code
     }
 
@@ -156,6 +162,10 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    deinit {
+        self.delegate = nil
     }
 
 }

@@ -89,10 +89,11 @@ class ServerManager: NSObject {
     
     public func getFriendsWithOffset(offset: NSInteger,
                                       count: NSInteger,
+                                      userId: String,
                                   onSuccess: @escaping (_ friends : Array<Person>) -> Void,
                                   onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
             //60054215 // 222754621
-        let dictionary = ["user_id":    accessToken.userId!,
+        let dictionary = ["user_id":    userId,
                           "order":      "name",
                           "count":      count,
                           "offset":     offset,

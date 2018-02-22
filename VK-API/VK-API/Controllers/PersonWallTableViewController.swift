@@ -9,7 +9,11 @@
 import UIKit
 import Alamofire
 
-class PersonWallTableViewController: UITableViewController {
+protocol CountersDelegate {
+    func collectionCellPressedAtIndex(indexPath : IndexPath)
+}
+
+class PersonWallTableViewController: UITableViewController, CountersDelegate {
 
     var userID = ""
     let postsCount = 2
@@ -36,6 +40,7 @@ class PersonWallTableViewController: UITableViewController {
                                    onSuccess: { userInformation, userCounters  in
                                     self.userInformation = userInformation
                                     self.userCounters = userCounters
+                                    
                                     //self.getWallPostsInformation()
                                     self.tableView.reloadData()
         }) { (error: Error, statusCode: NSInteger) in
@@ -125,14 +130,14 @@ class PersonWallTableViewController: UITableViewController {
             var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? CountersTableViewCell
             
             if cell == nil {
-                cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
+              cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
             }
             //let cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
             
             if self.userCounters.friends != nil {
                 cell?.counters = self.userCounters
+                cell?.delegate = self
             }
-            //cell.delegete = self
             
             return cell!
         }
@@ -149,7 +154,22 @@ class PersonWallTableViewController: UITableViewController {
         }
     }
     
-
+    func collectionCellPressedAtIndex(indexPath: IndexPath) {
+        if (indexPath.row == 0) {
+            self.performSegue(withIdentifier: "membersSegue", sender: self)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "membersSegue" {
+            
+            let dest = segue.destination as! ViewController
+            dest.userMain = userInformation
+            dest.isAuthorized = true
+        }
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
