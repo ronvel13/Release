@@ -49,13 +49,9 @@ class ServerManager: NSObject {
         if self.accessToken.expirationDate?.compare(Date.init()) == .orderedDescending {
             
             self.getUserInformation(userId: accessToken.userId!, onSuccess: { user, counters  in
-                if completion != nil {
                     completion(self.accessToken)
-                }
             }, onFailure: { (error, statusCode) in
-                if completion != nil {
                     completion(nil)
-                }
             })
         } else {
         
@@ -68,15 +64,11 @@ class ServerManager: NSObject {
                 
                 if token != nil {
                     self.getUserInformation(userId: self.accessToken.userId!, onSuccess: { user, counters in
-                        if completion != nil {
                             completion(self.accessToken)
-                        }
                     }, onFailure: { (error, statusCode) in
-                        if completion != nil {
                             completion(nil)
-                        }
                     })
-                } else if (completion != nil) {
+                } else {
                     completion(nil)
                 }
             }
@@ -94,10 +86,10 @@ class ServerManager: NSObject {
                                   onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
             //60054215 // 222754621
         let dictionary = ["user_id":    userId,
-                          "order":      "name",
+                          "order":      "hints",
                           "count":      count,
                           "offset":     offset,
-                          "fields":     "photo_50",
+                          "fields":     "photo_50,online",
                           "name_case":  "nom",
                           "v":          "5.73",
                           "access_token": accessToken.token!] as [String : Any]
@@ -116,7 +108,39 @@ class ServerManager: NSObject {
             case .failure(let error): onFailure(error, (response.response?.statusCode)!)
             }
         }
+    }
+    
+    public func getOnlineFriendsWithOffset(offset: NSInteger,
+                                     count: NSInteger,
+                                     userId: String,
+                                     onSuccess: @escaping (_ friends : Array<Person>) -> Void,
+                                     onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        //60054215 // 222754621
+        let dictionary = ["user_id":    userId,
+                          "order":      "hints",
+                          "count":      count,
+                          "offset":     offset,
+                          "fields":     "photo_50,online",
+                          "name_case":  "nom",
+                          "v":          "5.73",
+                          "access_token": accessToken.token!] as [String : Any]
         
+        request("https://api.vk.com/method/friends.get", method: .get, parameters: dictionary).responseJSON {
+            (response) in
+            switch response.result {
+            case .success(_) :
+                var persons = Array<Person>()
+                let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
+                for arr in array! {
+                    let person = Person(arr: arr)
+                    if person.online == 1 {
+                        persons.append(person)
+                    }
+                }
+                onSuccess(persons)
+            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
+            }
+        }
     }
     
     public func getUserInformation(userId: String,
@@ -152,6 +176,7 @@ class ServerManager: NSObject {
                     
                     if let count = arr["counters"] as? [String: Any] {
                         counters = UserCounters(arr: count)
+                        user.countFriends = count["friends"] as? Int
                     }
                     
                    /* self.getCityUser(

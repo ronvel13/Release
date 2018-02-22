@@ -10,16 +10,18 @@ import UIKit
 
 class Person: NSObject {
     
-    var firstName   : String
-    var lastName    : String
+    var firstName   : String?
+    var lastName    : String?
     var photo_50    : String?
-    var user_id     : String
+    var user_id     : String?
+    var online      : Int?
     
     init(arr : [String: Any]) {
         
-        firstName   = arr["first_name"] as! String
-        lastName    = arr["last_name"]  as! String
+        firstName   = arr["first_name"] as? String
+        lastName    = arr["last_name"]  as? String
         photo_50    = arr["photo_50"]   as? String
         user_id     = String(arr["id"]    as! Int)
+        online      = arr["online"]  as? Int
     }
 }

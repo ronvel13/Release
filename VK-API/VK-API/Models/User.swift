@@ -18,6 +18,7 @@ class User: NSObject {
     var universityName  : String?   = nil
     var cityName        : String?   = nil
     var countryName     : String?   = nil
+    var countFriends    : Int?      = nil
     
     init(arr : [String: Any]) {
         

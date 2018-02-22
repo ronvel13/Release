@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 protocol CountersDelegate {
-    func collectionCellPressedAtIndex(indexPath : IndexPath)
+    func collectionCellPressedAtIndex(indexPath : IndexPath, keys : Array<String>)
 }
 
 class PersonWallTableViewController: UITableViewController, CountersDelegate {
@@ -154,9 +154,23 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
         }
     }
     
-    func collectionCellPressedAtIndex(indexPath: IndexPath) {
-        if (indexPath.row == 0) {
+    func collectionCellPressedAtIndex(indexPath: IndexPath, keys: Array<String>) {
+        if keys[indexPath.row] == "друзей" {
             self.performSegue(withIdentifier: "membersSegue", sender: self)
+        } else if keys[indexPath.row] == "общих" {
+            self.performSegue(withIdentifier: "mutualFriendsSegue", sender: self)
+        } else if keys[indexPath.row] == "онлайн" {
+            self.performSegue(withIdentifier: "onlineSegue", sender: self)
+        } else if keys[indexPath.row] == "подписчиков" {
+           //
+        } else if keys[indexPath.row] == "групп" {
+            //
+        } else if keys[indexPath.row] == "фото" {
+            //
+        } else if keys[indexPath.row] == "видео" {
+            //
+        } else if keys[indexPath.row] == "аудио" {
+            //
         }
     }
     
@@ -167,6 +181,14 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
             let dest = segue.destination as! ViewController
             dest.userMain = userInformation
             dest.isAuthorized = true
+        } else if segue.identifier == "onlineSegue" {
+            let dest = segue.destination as! OnlineUsersTableViewController
+            dest.userMain = userInformation
+            dest.numberViewController = 0
+        } else if segue.identifier == "mutualFriendsSegue" {
+            let dest = segue.destination as! OnlineUsersTableViewController
+            dest.userMain = userInformation
+            dest.numberViewController = 1
         }
     }
     

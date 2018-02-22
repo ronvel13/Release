@@ -13,7 +13,8 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
     var delegate : CountersDelegate?
     var counters = UserCounters()
     var countCell = 0
-    var flag = [false, false, false, false, false, false, false]
+    var flag = [false, false, false, false, false, false, false, false]
+    var keyCounters = Array<String>()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -46,7 +47,7 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
         countCell += counters.photos        != nil && counters.photos        != 0 ? 1 : 0
         countCell += counters.videos        != nil && counters.videos        != 0 ? 1 : 0
         
-        return countCell - 1
+        return countCell
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -77,6 +78,7 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
                 if self.counters.friends != nil && self.counters.friends != 0 && !flag[0] {
                     nameLabel.text = "друзей"
                     countLabel.text = String(describing: self.counters.friends!)
+                    keyCounters.append("друзей")
                     flag[0] = true
                     break
                 }
@@ -85,47 +87,62 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
                 if self.counters.mutualFriends != nil && self.counters.mutualFriends != 0 && !flag[1] {
                     nameLabel.text = "общих"
                     countLabel.text = String(describing: self.counters.mutualFriends!)
+                    keyCounters.append("общих")
                     flag[1] = true
                     break
                 }
                 fallthrough
             case 2:
-                if self.counters.followers != nil && self.counters.followers != 0 && !flag[2] {
-                    nameLabel.text = "подписчиков"
-                    countLabel.text = String(describing: self.counters.followers!)
+                if self.counters.friends != nil && self.counters.friends != 0 && !flag[2] {
+                    nameLabel.text = "онлайн"
+                    countLabel.text = String(describing: self.counters.onlineFriends!)
+                    keyCounters.append("онлайн")
                     flag[2] = true
                     break
                 }
                 fallthrough
             case 3:
-                if self.counters.groups != nil && self.counters.groups != 0 && !flag[3] {
-                    nameLabel.text = "групп"
-                    countLabel.text = String(describing: self.counters.groups!)
+                if self.counters.followers != nil && self.counters.followers != 0 && !flag[3] {
+                    nameLabel.text = "подписчиков"
+                    countLabel.text = String(describing: self.counters.followers!)
+                    keyCounters.append("подписчиков")
                     flag[3] = true
                     break
                 }
                 fallthrough
             case 4:
-                if self.counters.photos != nil && self.counters.photos != 0 && !flag[4] {
-                    nameLabel.text = "фото"
-                    countLabel.text = String(describing: self.counters.photos!)
+                if self.counters.groups != nil && self.counters.groups != 0 && !flag[4] {
+                    nameLabel.text = "групп"
+                    countLabel.text = String(describing: self.counters.groups!)
+                    keyCounters.append("групп")
                     flag[4] = true
                     break
                 }
                 fallthrough
             case 5:
-                if self.counters.videos != nil && self.counters.videos != 0 && !flag[5] {
-                    nameLabel.text = "видео"
-                    countLabel.text = String(describing: self.counters.videos!)
+                if self.counters.photos != nil && self.counters.photos != 0 && !flag[5] {
+                    nameLabel.text = "фото"
+                    countLabel.text = String(describing: self.counters.photos!)
+                    keyCounters.append("фото")
                     flag[5] = true
                     break
                 }
                 fallthrough
             case 6:
-                if self.counters.audios != nil && self.counters.audios != 0 && !flag[6] {
+                if self.counters.videos != nil && self.counters.videos != 0 && !flag[6] {
+                    nameLabel.text = "видео"
+                    countLabel.text = String(describing: self.counters.videos!)
+                    keyCounters.append("видео")
+                    flag[6] = true
+                    break
+                }
+                fallthrough
+            case 7:
+                if self.counters.audios != nil && self.counters.audios != 0 && !flag[7] {
                     nameLabel.text = "аудио"
                     countLabel.text = String(describing: self.counters.audios!)
-                    flag[6] = true
+                    keyCounters.append("аудио")
+                    flag[7] = true
                     break
                 }
                 fallthrough
@@ -142,7 +159,7 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        self.delegate?.collectionCellPressedAtIndex(indexPath: indexPath)
+        self.delegate?.collectionCellPressedAtIndex(indexPath: indexPath, keys: keyCounters)
     }
 
     func cellWidth() -> CGFloat {

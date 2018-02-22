@@ -62,7 +62,7 @@
         <scene sceneID="6h4-Eq-Tm2">
             <objects>
                 <tableViewController id="8P8-hv-0NU" customClass="PersonWallTableViewController" customModule="VK_API" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="wcG-zL-gMQ">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="wcG-zL-gMQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -130,7 +130,7 @@
                                     <outlet property="photoUser" destination="Xng-OT-Kl5" id="wCM-jL-yal"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="counterCell" rowHeight="45" id="CKF-aM-2G2" customClass="CountersTableViewCell" customModule="VK_API" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="counterCell" rowHeight="45" id="CKF-aM-2G2" customClass="CountersTableViewCell" customModule="VK_API" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="158" width="375" height="45"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CKF-aM-2G2" id="MSF-bZ-lHo">
@@ -151,14 +151,50 @@
                     <navigationItem key="navigationItem" id="fBv-qE-wMo"/>
                     <connections>
                         <outlet property="tableViewWall" destination="wcG-zL-gMQ" id="r90-M3-53M"/>
+                        <segue destination="DrJ-Xl-2Uv" kind="push" identifier="onlineSegue" id="1uM-B0-XIh"/>
+                        <segue destination="DrJ-Xl-2Uv" kind="push" identifier="mutualFriendsSegue" id="VZA-xg-HUm"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1QK-xL-gM6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="713.5" y="246.5"/>
         </scene>
+        <!--Online Users Table View Controller-->
+        <scene sceneID="2Zu-6d-zR3">
+            <objects>
+                <tableViewController id="DrJ-Xl-2Uv" customClass="OnlineUsersTableViewController" customModule="VK_API" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="g5r-ii-7OQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="fLk-EH-cPq">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fLk-EH-cPq" id="yZT-Wm-gZb">
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="8P8-hv-0NU" kind="push" identifier="onlineFriendsSegue" id="OXi-xv-XVG"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="DrJ-Xl-2Uv" id="cDe-ZZ-veS"/>
+                            <outlet property="delegate" destination="DrJ-Xl-2Uv" id="HcU-1s-3Kc"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="FIa-ep-eSR"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d0x-OF-pqs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1273" y="248"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="VZA-xg-HUm"/>
+        <segue reference="OXi-xv-XVG"/>
         <segue reference="LH2-SX-tA9"/>
     </inferredMetricsTieBreakers>
 </document>
