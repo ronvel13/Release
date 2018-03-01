@@ -23,6 +23,7 @@ class PhotosTableViewController: UITableViewController {
         let refresh = UIRefreshControl()
         refresh.addTarget(self, action: #selector(refreshPage), for: .valueChanged)
         self.refreshControl = refresh
+        self.tableView.separatorColor = .clear
         getCountAlbumsFromServer()
         let queue = DispatchQueue(label: "com.myapp.queue")
         queue.async {
@@ -90,14 +91,13 @@ class PhotosTableViewController: UITableViewController {
         if (cell == nil) {
             cell = PhotosTableViewCell.init(style: .default, reuseIdentifier: cellIdentifier, album: album)
         }
-        
         cell?.albumNameLabel.text = album.title
         cell?.albumPhotosCountLabel.text = "\(album.size!) фото"
 
         return cell!
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return 170
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

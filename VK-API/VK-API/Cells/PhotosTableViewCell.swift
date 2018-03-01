@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegate {
+class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var photoArray = Array<Photo>()
     var albumNameLabel = UILabel()
@@ -19,30 +19,32 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
     var collectionView : UICollectionView?
     var loadingData = true
     let manager = ServerManager.sharedManager()
+    var downloadPhotosArray = Array<Array<UIImage>>()
     
     init(style: UITableViewCellStyle, reuseIdentifier: String?, album : Album) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsetsMake(0, 5, 0, 0)
-        layout.itemSize = CGSize.init(width: 100, height: 100)
-        layout.minimumInteritemSpacing = 5
-        layout.minimumLineSpacing = 2
+        layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        layout.itemSize = CGSize.init(width: 0, height: 0)
+        layout.minimumInteritemSpacing = 3
+        layout.minimumLineSpacing = 3
         layout.scrollDirection = .horizontal
         
-        collectionView = UICollectionView(frame: CGRect.init(x: 0, y: 50, width: cellWidth(), height: 150), collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect.init(x: 0, y: 60, width: cellWidth(), height: 100), collectionViewLayout: layout)
         collectionView?.dataSource = self
         collectionView?.delegate = self
         collectionView?.showsHorizontalScrollIndicator = false
         collectionView?.register(UICollectionViewCell.classForCoder(), forCellWithReuseIdentifier: "colectionCell")
         collectionView?.backgroundColor = .clear
         
-        albumNameLabel = UILabel.init(frame: CGRect.init(x: 15, y: 10, width: cellWidth(), height: 21))
+        albumNameLabel = UILabel.init(frame: CGRect.init(x: 15, y: 10, width: cellWidth(), height: 20))
         albumNameLabel.font = UIFont.systemFont(ofSize: 18)
         albumNameLabel.textColor = .black
         
         self.addSubview(albumNameLabel)
         
-        albumPhotosCountLabel = UILabel.init(frame: CGRect.init(x: 15, y: 29, width: cellWidth(), height: 21))
+        albumPhotosCountLabel = UILabel.init(frame: CGRect.init(x: 15, y: 30, width: cellWidth(), height: 20))
  
         albumPhotosCountLabel.font = UIFont.systemFont(ofSize: 15)
         albumPhotosCountLabel.textColor = .gray
@@ -56,7 +58,7 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
     
     func getPhotosFromServer() {
         manager.getPhotosFromAlbum(offset: photoArray.count,
-                                   count: 20,
+                                   count: 150,
                                    userId: album.ownerID!,
                                    albumId: album.id!,
                                    onSuccess: { (photos) in
@@ -70,7 +72,18 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
         }
     }
     
+    func downloadPhotos() {
+        for section in downloadPhotosArray {
+            for photo in section {
+                
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        
+        
         return photoArray.count
     }
     
@@ -78,18 +91,19 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colectionCell", for: indexPath)
         
-        let imageView = UIImageView.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        
-        cell.contentView.addSubview(imageView)
-        
         let photo = self.photoArray[indexPath.row]
-        
+        var size : Double = 1
+        if photo.width != nil && photo.height != nil {
+            size = Double(photo.width! / photo.height!)
+        }
+        let imageView = UIImageView.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         request(photo.photo_130!).response(completionHandler: { (response) in
             guard
                 let data = response.data,
                 let image = UIImage(data: data)
                 else { return }
             imageView.image = image
+            cell.contentView.addSubview(imageView)
         })
         
         return cell
@@ -109,9 +123,16 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.collectionView?.frame = CGRect.init(x: 0, y: 50, width: cellWidth(), height: 150)
+   func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let photo = self.photoArray[indexPath.row]
+        var size : Double = 1
+        if photo.width != nil && photo.height != nil {
+            size = Double(photo.width! / photo.height!)
+        }
+        return CGSize.init(width: 100, height: 100)
     }
     
     func cellWidth() -> CGFloat {

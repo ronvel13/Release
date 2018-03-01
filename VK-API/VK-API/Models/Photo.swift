@@ -10,8 +10,8 @@ import UIKit
 
 class Photo: NSObject {
     
-    var width       : Int? = nil
-    var height      : Int? = nil
+    var width       : Double? = nil
+    var height      : Double? = nil
     var photo_604   : String? = nil
     var photo_75    : String? = nil
     var photo_130   : String? = nil
@@ -20,8 +20,8 @@ class Photo: NSObject {
     var photo_2560  : String? = nil
     
     init(arr : [String: Any]) {
-        width       = arr["width"]      as? Int
-        height      = arr["height"]     as? Int
+        width       = arr["width"]      as? Double
+        height      = arr["height"]     as? Double
         photo_604   = arr["photo_604"]  as? String
         photo_75    = arr["photo_75"]   as? String
         photo_130   = arr["photo_130"]  as? String
