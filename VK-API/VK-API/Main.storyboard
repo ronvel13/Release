@@ -153,6 +153,7 @@
                         <outlet property="tableViewWall" destination="wcG-zL-gMQ" id="r90-M3-53M"/>
                         <segue destination="DrJ-Xl-2Uv" kind="push" identifier="onlineSegue" id="1uM-B0-XIh"/>
                         <segue destination="DrJ-Xl-2Uv" kind="push" identifier="mutualFriendsSegue" id="VZA-xg-HUm"/>
+                        <segue destination="QVq-At-hRI" kind="push" identifier="photoSegue" id="sQc-PI-2Sg"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1QK-xL-gM6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -191,9 +192,38 @@
             </objects>
             <point key="canvasLocation" x="1273" y="248"/>
         </scene>
+        <!--Photos Table View Controller-->
+        <scene sceneID="DcO-uO-owF">
+            <objects>
+                <tableViewController id="QVq-At-hRI" customClass="PhotosTableViewController" customModule="VK_API" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="RYC-px-XGo">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="photosIdentifier" id="1LM-hg-Fu1">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1LM-hg-Fu1" id="Fdg-Ku-Bw9">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="QVq-At-hRI" id="bkZ-QL-qUh"/>
+                            <outlet property="delegate" destination="QVq-At-hRI" id="zdl-Er-XVL"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="qHH-fy-F23"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LWx-kk-96Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1273" y="1140"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="VZA-xg-HUm"/>
+        <segue reference="1uM-B0-XIh"/>
         <segue reference="OXi-xv-XVG"/>
         <segue reference="LH2-SX-tA9"/>
     </inferredMetricsTieBreakers>

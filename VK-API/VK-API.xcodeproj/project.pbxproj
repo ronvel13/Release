@@ -28,6 +28,10 @@
 		3937E749203DD9F000AD3F9C /* CountersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E748203DD9F000AD3F9C /* CountersTableViewCell.swift */; };
 		3937E74B203DE1B000AD3F9C /* UserCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E74A203DE1B000AD3F9C /* UserCounters.swift */; };
 		3937E74D203F001B00AD3F9C /* OnlineUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937E74C203F001B00AD3F9C /* OnlineUsersTableViewController.swift */; };
+		39FBF885204701F600CCB155 /* PhotosTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FBF884204701F600CCB155 /* PhotosTableViewController.swift */; };
+		39FBF887204703BF00CCB155 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FBF886204703BF00CCB155 /* Album.swift */; };
+		39FBF88A20472CCB00CCB155 /* PhotosTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FBF88920472CCB00CCB155 /* PhotosTableViewCell.swift */; };
+		39FBF88C20472F0100CCB155 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FBF88B20472F0100CCB155 /* Photo.swift */; };
 		7EC6A2F648102352385DBEC1 /* Pods_VK_API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F976231335B75C1859A038FA /* Pods_VK_API.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
@@ -77,6 +81,10 @@
 		3937E748203DD9F000AD3F9C /* CountersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountersTableViewCell.swift; sourceTree = "<group>"; };
 		3937E74A203DE1B000AD3F9C /* UserCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCounters.swift; sourceTree = "<group>"; };
 		3937E74C203F001B00AD3F9C /* OnlineUsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineUsersTableViewController.swift; sourceTree = "<group>"; };
+		39FBF884204701F600CCB155 /* PhotosTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosTableViewController.swift; sourceTree = "<group>"; };
+		39FBF886204703BF00CCB155 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		39FBF88920472CCB00CCB155 /* PhotosTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosTableViewCell.swift; sourceTree = "<group>"; };
+		39FBF88B20472F0100CCB155 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		644EE22FF8798A27E0D989B9 /* Pods_VK_APIUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_APIUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9292CBF8B2539F6CC1ECFDF6 /* Pods-VK-API.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-API.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-API/Pods-VK-API.debug.xcconfig"; sourceTree = "<group>"; };
 		B3EEE1A75C130CC22EB92004 /* Pods-VK-APIUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-APIUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-APIUITests/Pods-VK-APIUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -176,6 +184,8 @@
 				391CBB36203C38C2005704D6 /* Person.swift */,
 				3937E746203C796D00AD3F9C /* AccessToken.swift */,
 				3937E74A203DE1B000AD3F9C /* UserCounters.swift */,
+				39FBF886204703BF00CCB155 /* Album.swift */,
+				39FBF88B20472F0100CCB155 /* Photo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -185,6 +195,7 @@
 			children = (
 				391CBB3F203C3912005704D6 /* UserFriendTableViewCell.swift */,
 				3937E748203DD9F000AD3F9C /* CountersTableViewCell.swift */,
+				39FBF88920472CCB00CCB155 /* PhotosTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -197,6 +208,7 @@
 				3937E744203C761E00AD3F9C /* LoginViewController.swift */,
 				391CBB3B203C3903005704D6 /* PersonWallTableViewController.swift */,
 				3937E74C203F001B00AD3F9C /* OnlineUsersTableViewController.swift */,
+				39FBF884204701F600CCB155 /* PhotosTableViewController.swift */,
 				391CBB3D203C3909005704D6 /* NavigationController.swift */,
 			);
 			path = Controllers;
@@ -521,12 +533,16 @@
 				3937E743203C749600AD3F9C /* ViewController.swift in Sources */,
 				391CBB37203C38C2005704D6 /* Person.swift in Sources */,
 				391CBB3E203C3909005704D6 /* NavigationController.swift in Sources */,
+				39FBF88A20472CCB00CCB155 /* PhotosTableViewCell.swift in Sources */,
 				391CBB35203C38BE005704D6 /* User.swift in Sources */,
 				391CBB3C203C3903005704D6 /* PersonWallTableViewController.swift in Sources */,
+				39FBF885204701F600CCB155 /* PhotosTableViewController.swift in Sources */,
 				3937E74B203DE1B000AD3F9C /* UserCounters.swift in Sources */,
+				39FBF887204703BF00CCB155 /* Album.swift in Sources */,
 				391CBB40203C3912005704D6 /* UserFriendTableViewCell.swift in Sources */,
 				391CBB33203C38B9005704D6 /* Wall.swift in Sources */,
 				391CBB3A203C38FC005704D6 /* ServerManager.swift in Sources */,
+				39FBF88C20472F0100CCB155 /* Photo.swift in Sources */,
 				3937E749203DD9F000AD3F9C /* CountersTableViewCell.swift in Sources */,
 				3937E745203C761E00AD3F9C /* LoginViewController.swift in Sources */,
 				3937E74D203F001B00AD3F9C /* OnlineUsersTableViewController.swift in Sources */,

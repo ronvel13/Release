@@ -83,7 +83,7 @@ class ViewController: UITableViewController {
             
             cell?.imageView?.image = image
             
-            let imageLayer = cell?.imageView?.layer;
+            let imageLayer = cell?.imageView?.layer
             imageLayer?.cornerRadius = 25
             imageLayer?.masksToBounds = true
             cell?.layoutSubviews()
@@ -117,7 +117,7 @@ class ViewController: UITableViewController {
         if segue.identifier == "PersonMain" {
             let indexPath = self.tableView.indexPath(for: sender as! UITableViewCell)
             let friend = self.friends[(indexPath?.row)!]
-            let dest : PersonWallTableViewController = segue.destination as! PersonWallTableViewController
+            let dest = segue.destination as! PersonWallTableViewController
             dest.userID = friend.user_id!
         }
     }

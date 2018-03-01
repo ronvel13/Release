@@ -132,7 +132,6 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
             if cell == nil {
               cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
             }
-            //let cell = CountersTableViewCell.init(style: .default, reuseIdentifier: counterCellIdentifier)
             
             if self.userCounters.friends != nil {
                 cell?.counters = self.userCounters
@@ -166,7 +165,7 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
         } else if keys[indexPath.row] == "групп" {
             //
         } else if keys[indexPath.row] == "фото" {
-            //
+            self.performSegue(withIdentifier: "photoSegue", sender: self)
         } else if keys[indexPath.row] == "видео" {
             //
         } else if keys[indexPath.row] == "аудио" {
@@ -189,6 +188,9 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
             let dest = segue.destination as! OnlineUsersTableViewController
             dest.userMain = userInformation
             dest.numberViewController = 1
+        } else if segue.identifier == "photoSegue" {
+            let dest = segue.destination as! PhotosTableViewController
+            dest.userID = userID
         }
     }
     

@@ -12,9 +12,9 @@ import Alamofire
 class ServerManager: NSObject {
     
     var accessToken = AccessToken()
-    let keyToken = "keyToken"
-    let keyExpirationDate = "keyExpirationDate"
-    let keyUserId = "keyUserId"
+    let keyToken            = "keyToken"
+    let keyExpirationDate   = "keyExpirationDate"
+    let keyUserId           = "keyUserId"
     
     static func sharedManager() -> ServerManager {
         let manager = ServerManager()
@@ -206,58 +206,6 @@ class ServerManager: NSObject {
         }*/
     }
     
-  /*  public func getCityUser(cityId: String,
-                         onSuccess: @escaping (_ city : String) -> Void,
-                         onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
-        if cityId != "-1" {
-            let dictionary = ["city_ids": cityId,
-                              "v":        "5.73",
-                              "access_token": accessToken.token!] as [String : Any]
-            
-            request("https://api.vk.com/method/database.getCitiesById", method: .get, parameters: dictionary).responseJSON {
-                (response) in
-                switch response.result {
-                case .success(_) :
-                    var city = ""
-                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
-                    for  arr in array! {
-                        city = arr["name"] as! String
-                    }
-                    onSuccess(city)
-                case .failure(let error) :
-                    onFailure(error, (response.response?.statusCode)!)
-                }
-            }
-        } else { onSuccess("") }
-    }
-    
-    public func getCountryUser(coutryId: String,
-                            onSuccess: @escaping (_ country : String) -> Void,
-                            onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
-        if coutryId != "-1" {
-            let dictionary = ["country_ids": coutryId,
-                              "v":           "5.73",
-                              "access_token": accessToken.token!] as [String : Any]
-     
-            request("https://api.vk.com/method/database.getCountriesById", method: .get, parameters: dictionary).responseJSON {
-                (response) in
-                switch response.result {
-                case .success(_) :
-                    var country = ""
-                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
-                    
-                    for  arr in array! {
-                        country = arr["name"] as! String
-                    }
-                    
-                    onSuccess(country)
-                case .failure(let error) :
-                    onFailure(error, (response.response?.statusCode)!)
-                }
-            }
-        } else { onSuccess("") }
-    }*/
-    
     public func getWallPostsWithOffset(offset: NSInteger,
                                        count: NSInteger,
                                        userId: String,
@@ -279,9 +227,89 @@ class ServerManager: NSObject {
                 let persons = Array<Person>()
                 let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
                 for arr in array! {
-                   
+                    
                 }
                 onSuccess(persons)
+            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
+            }
+        }
+    }
+    
+    func getAlbumsById(offset: NSInteger,
+                             count: NSInteger,
+                             userId: String,
+                             onSuccess: @escaping (_ posts : Array<Album>) -> Void,
+                             onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+    
+        let dictionary = ["owner_id":   userId,
+                          "count":      count,
+                          "offset":     offset,
+                          "v":           "5.73",
+                          "access_token": accessToken.token!] as [String : Any]
+        
+        request("https://api.vk.com/method/photos.getAlbums", method: .get, parameters: dictionary).responseJSON {
+            (response) in
+            switch response.result {
+            case .success(_) :
+                var album = Array<Album>()
+                let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
+                for arr in array! {
+                    let alb = Album(arr: arr)
+                    album.append(alb)
+                }
+                onSuccess(album)
+            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
+            }
+        }
+   
+    }
+    
+    func getCountAlbumsById(userId: String,
+                             onSuccess: @escaping (_ posts : Int) -> Void,
+                             onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        
+        let dictionary = ["user_id":   userId,
+                          "v":           "5.73",
+                          "access_token": accessToken.token!] as [String : Any]
+        
+        request("https://api.vk.com/method/photos.getAlbumsCount", method: .get, parameters: dictionary).responseJSON {
+            (response) in
+            switch response.result {
+            case .success(_) :
+                let countAlbum = (response.result.value as? [String: Any])?["response"] as? Int
+                onSuccess(countAlbum!)
+            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
+            }
+        }
+    }
+    
+    public func getPhotosFromAlbum(offset: NSInteger,
+                                   count: NSInteger,
+                                   userId: Int,
+                                   albumId: Int,
+                                   onSuccess: @escaping (_ posts : Array<Photo>) -> Void,
+                                   onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+       
+        let dictionary = ["owner_id":   userId,
+                          "album_id":   albumId,
+                          "count":      count,
+                          "offset":     offset,
+                          "rev":        "1",
+                          "extended":   "0",
+                          "v":           "5.73",
+                          "access_token": accessToken.token!] as [String : Any]
+        
+        request("https://api.vk.com/method/photos.get", method: .get, parameters: dictionary).responseJSON {
+            (response) in
+            switch response.result {
+            case .success(_) :
+                var photos = Array<Photo>()
+                let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
+                for arr in array! {
+                    let ph = Photo(arr: arr)
+                    photos.append(ph)
+                }
+                onSuccess(photos)
             case .failure(let error): onFailure(error, (response.response?.statusCode)!)
             }
         }
