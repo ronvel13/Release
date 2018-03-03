@@ -24,42 +24,41 @@ class PhotosTableViewController: UITableViewController {
         refresh.addTarget(self, action: #selector(refreshPage), for: .valueChanged)
         self.refreshControl = refresh
         self.tableView.separatorColor = .clear
-        getCountAlbumsFromServer()
-        let queue = DispatchQueue(label: "com.myapp.queue")
-        queue.async {
-            DispatchQueue.main.async {
-                self.getAlbumsFromServer()
-            }
-        }
+      
+        getAlbumsFromServer()
     }
     
     @objc func refreshPage() {
-        
-    }
-    
-    func getCountAlbumsFromServer() {
-        manager.getCountAlbumsById(userId: userID!,
-                                   onSuccess: { (count) in
-                                    self.countAlbums = count
+        manager.getAlbumsById(userId: userID!,
+                              onSuccess: { (albumArray) in
+                                if albumArray.count > 0 {
+                                    self.albumArray.removeAll()
+                                    self.albumArray = albumArray
+                                    self.refreshControl?.endRefreshing()
+                                    self.tableView.reloadData()
+                                } else {
+                                    self.refreshControl?.endRefreshing()
+                                }
         }) { (error: Error, statusCode: NSInteger) in
             print("error = \(error.localizedDescription), code = \(statusCode)")
         }
     }
     
+    
     func getAlbumsFromServer() {
-        manager.getAlbumsById(offset: 0,
-                                    count: countAlbums,
-                                    userId: userID!,
-                                    onSuccess: { (albumArray) in
+        manager.getAlbumsById(userId: userID!,
+                              onSuccess: { (albumArray) in
             if albumArray.count > 0 {
+                var del = Array<Int>()
                 self.albumArray = albumArray
-                /*var indexPath = [IndexPath()]
-                for i in (self.albumArray.count - albumArray.count)..<self.albumArray.count {
-                    indexPath.append(IndexPath.init(row: i, section: 0))
+                for i in 0..<self.albumArray.count {
+                    if self.albumArray[i].size == 0 {
+                        del.append(i)
+                    }
                 }
-                self.tableView.beginUpdates()
-                self.tableView.insertRows(at: indexPath, with: .right)
-                self.tableView.endUpdates()*/
+                for d in del {
+                    self.albumArray.remove(at: d)
+                }
                 self.tableView.reloadData()
             }
         }) { (error: Error, statusCode: NSInteger) in
@@ -86,15 +85,15 @@ class PhotosTableViewController: UITableViewController {
         
         let album = self.albumArray[indexPath.row]
         
-        var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? PhotosTableViewCell
+        //var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? PhotosTableViewCell
         
-        if (cell == nil) {
-            cell = PhotosTableViewCell.init(style: .default, reuseIdentifier: cellIdentifier, album: album)
-        }
-        cell?.albumNameLabel.text = album.title
-        cell?.albumPhotosCountLabel.text = "\(album.size!) фото"
+        //if (cell == nil) {
+            let cell = PhotosTableViewCell.init(style: .default, reuseIdentifier: cellIdentifier, album: album)
+        //}
+        cell.albumNameLabel.text = album.title
+        cell.albumPhotosCountLabel.text = "\(album.size!) фото"
 
-        return cell!
+        return cell
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 170

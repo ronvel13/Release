@@ -56,7 +56,7 @@ class CountersTableViewCell: UITableViewCell, UICollectionViewDataSource, UIColl
         
         counerCell.backgroundColor = .clear
         
-        let nameLabel = UILabel.init(frame: CGRect(x: 0, y: 34, width: 80, height: 15))
+        let nameLabel = UILabel.init(frame: CGRect(x: 0, y: 34, width: 80, height: 13))
         let countLabel = UILabel.init(frame: CGRect(x: 0, y: 14, width: 80, height: 15))
         
         nameLabel.textAlignment = .center

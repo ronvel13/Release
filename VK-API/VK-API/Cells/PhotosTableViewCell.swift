@@ -19,7 +19,6 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
     var collectionView : UICollectionView?
     var loadingData = true
     let manager = ServerManager.sharedManager()
-    var downloadPhotosArray = Array<Array<UIImage>>()
     
     init(style: UITableViewCellStyle, reuseIdentifier: String?, album : Album) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -35,7 +34,7 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
         collectionView?.dataSource = self
         collectionView?.delegate = self
         collectionView?.showsHorizontalScrollIndicator = false
-        collectionView?.register(UICollectionViewCell.classForCoder(), forCellWithReuseIdentifier: "colectionCell")
+        collectionView?.register(UICollectionViewCell.classForCoder(), forCellWithReuseIdentifier: "photosIdentifier")
         collectionView?.backgroundColor = .clear
         
         albumNameLabel = UILabel.init(frame: CGRect.init(x: 15, y: 10, width: cellWidth(), height: 20))
@@ -58,52 +57,55 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
     
     func getPhotosFromServer() {
         manager.getPhotosFromAlbum(offset: photoArray.count,
-                                   count: 150,
+                                   count: 50,
                                    userId: album.ownerID!,
                                    albumId: album.id!,
                                    onSuccess: { (photos) in
-                                    if photos.count > 0 {
-                                        self.photoArray += photos
-                                        self.collectionView?.reloadData()
-                                        self.loadingData = false
+                                    if photos == nil {
+                                        self.getPhotosFromServer()
+                                    } else {
+                                        if (photos?.count)! > 0 {
+                                            self.photoArray += photos!
+                                            self.collectionView?.reloadData()
+                                            self.loadingData = false
+                                        }
                                     }
         }) { (error: Error, statusCode: NSInteger) in
             print("error = \(error.localizedDescription), code = \(statusCode)")
         }
     }
     
-    func downloadPhotos() {
-        for section in downloadPhotosArray {
-            for photo in section {
-                
-            }
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        
         
         return photoArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colectionCell", for: indexPath)
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photosIdentifier", for: indexPath)
+
         let photo = self.photoArray[indexPath.row]
-        var size : Double = 1
-        if photo.width != nil && photo.height != nil {
-            size = Double(photo.width! / photo.height!)
+        var photo_zise = ""
+        
+        if let ph = photo.photo_1280 {
+            photo_zise = ph
+        } else if let ph = photo.photo_807 {
+            photo_zise = ph
+        } else if let ph = photo.photo_604 {
+            photo_zise = ph
+        } else if let ph = photo.photo_130 {
+            photo_zise = ph
+        } else if let ph = photo.photo_75 {
+            photo_zise = ph
         }
-        let imageView = UIImageView.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        request(photo.photo_130!).response(completionHandler: { (response) in
+        
+        request(photo_zise).response(completionHandler: { (response) in
             guard
                 let data = response.data,
                 let image = UIImage(data: data)
                 else { return }
-            imageView.image = image
-            cell.contentView.addSubview(imageView)
+
+            cell.backgroundView = UIImageView.init(image: image)
         })
         
         return cell
@@ -132,7 +134,7 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
         if photo.width != nil && photo.height != nil {
             size = Double(photo.width! / photo.height!)
         }
-        return CGSize.init(width: 100, height: 100)
+        return CGSize.init(width: 100 * size, height: 100)
     }
     
     func cellWidth() -> CGFloat {

@@ -15,6 +15,8 @@ class ServerManager: NSObject {
     let keyToken            = "keyToken"
     let keyExpirationDate   = "keyExpirationDate"
     let keyUserId           = "keyUserId"
+    //self.requestQueue = dispatch_queue_create("iOSDevCourse.requestVk", DISPATCH_QUEUE_PRIORITY_DEFAULT);
+    let queue = DispatchQueue(label: "queuename", attributes: .concurrent)
     
     static func sharedManager() -> ServerManager {
         let manager = ServerManager()
@@ -235,16 +237,13 @@ class ServerManager: NSObject {
         }
     }
     
-    func getAlbumsById(offset: NSInteger,
-                             count: NSInteger,
-                             userId: String,
-                             onSuccess: @escaping (_ posts : Array<Album>) -> Void,
-                             onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+    func getAlbumsById(userId: String,
+                       onSuccess: @escaping (_ posts : Array<Album>) -> Void,
+                       onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
     
-        let dictionary = ["owner_id":   userId,
-                          "count":      count,
-                          "offset":     offset,
-                          "v":           "5.73",
+        let dictionary = ["owner_id":       userId,
+                          "need_system":    1,
+                          "v":              "5.73",
                           "access_token": accessToken.token!] as [String : Any]
         
         request("https://api.vk.com/method/photos.getAlbums", method: .get, parameters: dictionary).responseJSON {
@@ -253,9 +252,11 @@ class ServerManager: NSObject {
             case .success(_) :
                 var album = Array<Album>()
                 let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
-                for arr in array! {
-                    let alb = Album(arr: arr)
-                    album.append(alb)
+                if array != nil {
+                    for arr in array! {
+                        let alb = Album(arr: arr)
+                        album.append(alb)
+                    }
                 }
                 onSuccess(album)
             case .failure(let error): onFailure(error, (response.response?.statusCode)!)
@@ -264,32 +265,12 @@ class ServerManager: NSObject {
    
     }
     
-    func getCountAlbumsById(userId: String,
-                             onSuccess: @escaping (_ posts : Int) -> Void,
-                             onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
-        
-        let dictionary = ["user_id":   userId,
-                          "v":           "5.73",
-                          "access_token": accessToken.token!] as [String : Any]
-        
-        request("https://api.vk.com/method/photos.getAlbumsCount", method: .get, parameters: dictionary).responseJSON {
-            (response) in
-            switch response.result {
-            case .success(_) :
-                let countAlbum = (response.result.value as? [String: Any])?["response"] as? Int
-                onSuccess(countAlbum!)
-            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
-            }
-        }
-    }
-    
     public func getPhotosFromAlbum(offset: NSInteger,
                                    count: NSInteger,
                                    userId: Int,
                                    albumId: Int,
-                                   onSuccess: @escaping (_ posts : Array<Photo>) -> Void,
+                                   onSuccess: @escaping (_ posts : Array<Photo>?) -> Void,
                                    onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
-       
         let dictionary = ["owner_id":   userId,
                           "album_id":   albumId,
                           "count":      count,
@@ -298,19 +279,25 @@ class ServerManager: NSObject {
                           "extended":   "0",
                           "v":           "5.73",
                           "access_token": accessToken.token!] as [String : Any]
-        
-        request("https://api.vk.com/method/photos.get", method: .get, parameters: dictionary).responseJSON {
-            (response) in
-            switch response.result {
-            case .success(_) :
-                var photos = Array<Photo>()
-                let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
-                for arr in array! {
-                    let ph = Photo(arr: arr)
-                    photos.append(ph)
+        self.queue.async {
+            request("https://api.vk.com/method/photos.get", method: .get, parameters: dictionary).responseJSON {
+                (response) in
+                switch response.result {
+                case .success(_) :
+                        var photos = Array<Photo>()
+                        let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
+                        if array != nil {
+                            for arr in array! {
+                                let ph = Photo(arr: arr)
+                                photos.append(ph)
+                            }
+                        }
+                        
+                        DispatchQueue.main.async {
+                            onSuccess(photos)
+                        }
+                case .failure(let error): onFailure(error, (response.response?.statusCode)!)
                 }
-                onSuccess(photos)
-            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
             }
         }
     }
