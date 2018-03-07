@@ -154,6 +154,7 @@
                         <segue destination="DrJ-Xl-2Uv" kind="push" identifier="onlineSegue" id="1uM-B0-XIh"/>
                         <segue destination="DrJ-Xl-2Uv" kind="push" identifier="mutualFriendsSegue" id="VZA-xg-HUm"/>
                         <segue destination="QVq-At-hRI" kind="push" identifier="photoSegue" id="sQc-PI-2Sg"/>
+                        <segue destination="M91-bu-Jvf" kind="push" identifier="videoSegue" id="xpp-vk-SUu"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1QK-xL-gM6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -221,9 +222,74 @@
             </objects>
             <point key="canvasLocation" x="1273" y="1140"/>
         </scene>
+        <!--Video Table View Controller-->
+        <scene sceneID="dVO-UZ-TCu">
+            <objects>
+                <tableViewController id="M91-bu-Jvf" customClass="VideoTableViewController" customModule="VK_API" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ASr-em-JhQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videosCell" rowHeight="100" id="Qul-Zx-YcJ" customClass="VideosTableViewCell" customModule="VK_API" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="100"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Qul-Zx-YcJ" id="6ib-tB-FhL">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="f7T-MN-tST">
+                                            <rect key="frame" x="10" y="10" width="130" height="80"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bs0-vw-tbZ">
+                                            <rect key="frame" x="148" y="10" width="227" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3gi-lK-vpp">
+                                            <rect key="frame" x="148" y="50" width="227" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="E6b-uP-HNA">
+                                            <rect key="frame" x="148" y="70" width="227" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="groupLabel" destination="3gi-lK-vpp" id="rla-Zp-bsY"/>
+                                    <outlet property="imageVideo" destination="f7T-MN-tST" id="BeW-nZ-aMS"/>
+                                    <outlet property="nameLabel" destination="bs0-vw-tbZ" id="uOe-OT-SW2"/>
+                                    <outlet property="viewLabel" destination="E6b-uP-HNA" id="nbf-Mc-3d3"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="M91-bu-Jvf" id="Ewd-Cm-pUr"/>
+                            <outlet property="delegate" destination="M91-bu-Jvf" id="tnA-LY-jJ9"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="sv5-ve-FQ6"/>
+                    <connections>
+                        <outlet property="tableViewVideo" destination="ASr-em-JhQ" id="yOJ-Hc-Qqt"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="enb-kC-2Lx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1272.5" y="1953.5"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="1uM-B0-XIh"/>
+        <segue reference="VZA-xg-HUm"/>
         <segue reference="OXi-xv-XVG"/>
         <segue reference="LH2-SX-tA9"/>
     </inferredMetricsTieBreakers>

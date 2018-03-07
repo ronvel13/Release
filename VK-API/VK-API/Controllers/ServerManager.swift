@@ -238,7 +238,7 @@ class ServerManager: NSObject {
     }
     
     func getAlbumsById(userId: String,
-                       onSuccess: @escaping (_ posts : Array<Album>) -> Void,
+                       onSuccess: @escaping (_ albums : Array<Album>) -> Void,
                        onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
     
         let dictionary = ["owner_id":       userId,
@@ -269,8 +269,9 @@ class ServerManager: NSObject {
                                    count: NSInteger,
                                    userId: Int,
                                    albumId: Int,
-                                   onSuccess: @escaping (_ posts : Array<Photo>?) -> Void,
+                                   onSuccess: @escaping (_ photos : Array<Photo>?) -> Void,
                                    onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        
         let dictionary = ["owner_id":   userId,
                           "album_id":   albumId,
                           "count":      count,
@@ -279,7 +280,7 @@ class ServerManager: NSObject {
                           "extended":   "0",
                           "v":           "5.73",
                           "access_token": accessToken.token!] as [String : Any]
-        self.queue.async {
+
             request("https://api.vk.com/method/photos.get", method: .get, parameters: dictionary).responseJSON {
                 (response) in
                 switch response.result {
@@ -292,12 +293,48 @@ class ServerManager: NSObject {
                                 photos.append(ph)
                             }
                         }
-                        
-                        DispatchQueue.main.async {
-                            onSuccess(photos)
-                        }
+                        onSuccess(photos)
                 case .failure(let error): onFailure(error, (response.response?.statusCode)!)
                 }
+            }
+    }
+    
+    public func getVideoUsers(offset: NSInteger,
+                              count: NSInteger,
+                              userId: Int,
+                              onSuccess: @escaping (_ videos : Array<Video>, _ videosInGroup: Array<VideoInGroup>) -> Void,
+                              onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        
+        let dictionary = ["owner_id":   userId,
+                          "count":      count,
+                          "offset":     offset,
+                          "extended":   "1",
+                          "v":           "5.73",
+                          "access_token": accessToken.token!] as [String : Any]
+        
+        request("https://api.vk.com/method/video.get", method: .get, parameters: dictionary).responseJSON {
+            (response) in
+            switch response.result {
+            case .success(_) :
+                var videos = Array<Video>()
+                var array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
+                if array != nil {
+                    for arr in array! {
+                        let video = Video(arr: arr)
+                        videos.append(video)
+                    }
+                }
+                
+                var videosInGroup = Array<VideoInGroup>()
+                array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["groups"] as? [[String: Any]]
+                if array != nil {
+                    for arr in array! {
+                        let videoInGroup = VideoInGroup(arr: arr)
+                        videosInGroup.append(videoInGroup)
+                    }
+                }
+                onSuccess(videos, videosInGroup)
+            case .failure(let error): onFailure(error, (response.response?.statusCode)!)
             }
         }
     }

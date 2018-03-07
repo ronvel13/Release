@@ -31,26 +31,32 @@ class PhotosTableViewController: UITableViewController {
     @objc func refreshPage() {
         manager.getAlbumsById(userId: userID!,
                               onSuccess: { (albumArray) in
-                                if albumArray.count > 0 {
-                                    self.albumArray.removeAll()
-                                    self.albumArray = albumArray
-                                    self.refreshControl?.endRefreshing()
-                                    self.tableView.reloadData()
-                                } else {
-                                    self.refreshControl?.endRefreshing()
-                                }
+            if albumArray.count > 0 {
+                var del = Array<Int>()
+                self.albumArray.removeAll()
+                self.albumArray += albumArray
+                for i in 0..<self.albumArray.count {
+                    if self.albumArray[i].size == 0 {
+                        del.append(i)
+                    }
+                }
+                for d in del {
+                    self.albumArray.remove(at: d)
+                }
+                self.refreshControl?.endRefreshing()
+                self.tableView.reloadData()
+            }
         }) { (error: Error, statusCode: NSInteger) in
             print("error = \(error.localizedDescription), code = \(statusCode)")
         }
     }
-    
     
     func getAlbumsFromServer() {
         manager.getAlbumsById(userId: userID!,
                               onSuccess: { (albumArray) in
             if albumArray.count > 0 {
                 var del = Array<Int>()
-                self.albumArray = albumArray
+                self.albumArray += albumArray
                 for i in 0..<self.albumArray.count {
                     if self.albumArray[i].size == 0 {
                         del.append(i)
@@ -95,13 +101,14 @@ class PhotosTableViewController: UITableViewController {
 
         return cell
     }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 170
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        self.performSegue(withIdentifier: "detailCollectionSegue", sender: indexPath)
+        //self.performSegue(withIdentifier: "detailCollectionSegue", sender: indexPath)
     }
     
 // MARK: - Navigation

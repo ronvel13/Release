@@ -57,19 +57,15 @@ class PhotosTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollec
     
     func getPhotosFromServer() {
         manager.getPhotosFromAlbum(offset: photoArray.count,
-                                   count: 50,
+                                   count: 20,
                                    userId: album.ownerID!,
                                    albumId: album.id!,
                                    onSuccess: { (photos) in
-                                    if photos == nil {
-                                        self.getPhotosFromServer()
-                                    } else {
-                                        if (photos?.count)! > 0 {
-                                            self.photoArray += photos!
-                                            self.collectionView?.reloadData()
-                                            self.loadingData = false
-                                        }
-                                    }
+            if (photos?.count)! > 0 {
+                self.photoArray += photos!
+                self.collectionView?.reloadData()
+                self.loadingData = false
+            }
         }) { (error: Error, statusCode: NSInteger) in
             print("error = \(error.localizedDescription), code = \(statusCode)")
         }

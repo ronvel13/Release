@@ -167,7 +167,7 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
         } else if keys[indexPath.row] == "фото" {
             self.performSegue(withIdentifier: "photoSegue", sender: self)
         } else if keys[indexPath.row] == "видео" {
-            //
+            self.performSegue(withIdentifier: "videoSegue", sender: self)
         } else if keys[indexPath.row] == "аудио" {
             //
         }
@@ -191,6 +191,9 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
         } else if segue.identifier == "photoSegue" {
             let dest = segue.destination as! PhotosTableViewController
             dest.userID = userID
+        } else if segue.identifier == "videoSegue" {
+            let dest = segue.destination as! VideoTableViewController
+            dest.userID = Int(userID)
         }
     }
     

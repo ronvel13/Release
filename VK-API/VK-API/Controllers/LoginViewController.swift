@@ -35,10 +35,10 @@ class LoginViewController: UIViewController, UIWebViewDelegate {
         
         self.navigationItem.setRightBarButton(item, animated:true)
         self.navigationItem.title = "Login"
-        
+        //4199692
         let urlString = "https://oauth.vk.com/authorize?" +
         "client_id=4395172&" +
-        "scope=4199692&" +
+        "scope=933087&" +
         "redirect_uri=https://oauth.vk.com/blank.html&" +
         "display=mobile&" +
         "v=5.73&" +

@@ -1,31 +1,28 @@
 //
-//  UserFriendTableViewCell.swift
-//  APITest_VK
+//  VideosTableViewCell.swift
+//  VK-API
 //
-//  Created by Андрей Фоменко on 16.02.2018.
+//  Created by Андрей Фоменко on 07.03.2018.
 //  Copyright © 2018 Андрей Фоменко. All rights reserved.
 //
 
 import UIKit
 
-class UserFriendTableViewCell: UITableViewCell {
-    
-    @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var informationAboutUser: UILabel!
-    @IBOutlet weak var allInformationAboutUser: UIButton!
-    @IBOutlet weak var photoUser: UIImageView!
-    @IBOutlet weak var isOnline: UILabel!
-    
+class VideosTableViewCell: UITableViewCell {
+
+    @IBOutlet weak var imageVideo: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var groupLabel: UILabel!
+    @IBOutlet weak var viewLabel: UILabel!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
