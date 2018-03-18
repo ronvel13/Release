@@ -192,7 +192,7 @@ class PersonWallTableViewController: UITableViewController, CountersDelegate {
             let dest = segue.destination as! PhotosTableViewController
             dest.userID = userID
         } else if segue.identifier == "videoSegue" {
-            let dest = segue.destination as! VideoTableViewController
+            let dest = segue.destination as! MovieTableViewController
             dest.userID = Int(userID)
         }
     }

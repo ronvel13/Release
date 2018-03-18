@@ -154,7 +154,7 @@
                         <segue destination="DrJ-Xl-2Uv" kind="push" identifier="onlineSegue" id="1uM-B0-XIh"/>
                         <segue destination="DrJ-Xl-2Uv" kind="push" identifier="mutualFriendsSegue" id="VZA-xg-HUm"/>
                         <segue destination="QVq-At-hRI" kind="push" identifier="photoSegue" id="sQc-PI-2Sg"/>
-                        <segue destination="M91-bu-Jvf" kind="push" identifier="videoSegue" id="xpp-vk-SUu"/>
+                        <segue destination="M91-bu-Jvf" kind="push" identifier="videoSegue" id="1Wf-jT-bmt"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1QK-xL-gM6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -222,27 +222,27 @@
             </objects>
             <point key="canvasLocation" x="1273" y="1140"/>
         </scene>
-        <!--Video Table View Controller-->
+        <!--Movie Table View Controller-->
         <scene sceneID="dVO-UZ-TCu">
             <objects>
-                <tableViewController id="M91-bu-Jvf" customClass="VideoTableViewController" customModule="VK_API" sceneMemberID="viewController">
+                <tableViewController id="M91-bu-Jvf" customClass="MovieTableViewController" customModule="VK_API" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ASr-em-JhQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videosCell" rowHeight="100" id="Qul-Zx-YcJ" customClass="VideosTableViewCell" customModule="VK_API" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="videosCell" rowHeight="100" id="Qul-Zx-YcJ" customClass="VideosTableViewCell" customModule="VK_API" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Qul-Zx-YcJ" id="6ib-tB-FhL">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="99.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="f7T-MN-tST">
                                             <rect key="frame" x="10" y="10" width="130" height="80"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bs0-vw-tbZ">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="none" adjustsFontSizeToFit="NO" id="bs0-vw-tbZ">
                                             <rect key="frame" x="148" y="10" width="227" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -270,6 +270,7 @@
                                     <outlet property="imageVideo" destination="f7T-MN-tST" id="BeW-nZ-aMS"/>
                                     <outlet property="nameLabel" destination="bs0-vw-tbZ" id="uOe-OT-SW2"/>
                                     <outlet property="viewLabel" destination="E6b-uP-HNA" id="nbf-Mc-3d3"/>
+                                    <segue destination="hbK-ra-auA" kind="push" identifier="playSegue" id="TbJ-Fu-ikz"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -279,18 +280,69 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="sv5-ve-FQ6"/>
-                    <connections>
-                        <outlet property="tableViewVideo" destination="ASr-em-JhQ" id="yOJ-Hc-Qqt"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="enb-kC-2Lx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1272.5" y="1953.5"/>
         </scene>
+        <!--Play Video Table View Controller-->
+        <scene sceneID="0Dd-Hn-lZ6">
+            <objects>
+                <tableViewController id="hbK-ra-auA" customClass="PlayVideoTableViewController" customModule="VK_API" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="YzF-j7-Axa">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="videoPlayCell" rowHeight="70" id="XIX-22-vAd" customClass="VideoHeaderTableViewCell" customModule="VK_API" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="70"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XIX-22-vAd" id="ht7-xa-mqC">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="Udh-0f-6hh">
+                                            <rect key="frame" x="10" y="-10" width="70" height="70"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1X1-Xu-xz7">
+                                            <rect key="frame" x="88" y="5" width="290" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.07665600280822088" green="0.14487387807862326" blue="0.59105812823834203" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Pxr-qH-Rvv">
+                                            <rect key="frame" x="88" y="34" width="287" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateLabel" destination="Pxr-qH-Rvv" id="yN8-yZ-aiy"/>
+                                    <outlet property="mainImage" destination="Udh-0f-6hh" id="eTg-oC-9lk"/>
+                                    <outlet property="nameLabel" destination="1X1-Xu-xz7" id="tMs-kq-FQ0"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="hbK-ra-auA" id="0Mi-ev-H3o"/>
+                            <outlet property="delegate" destination="hbK-ra-auA" id="VJi-R5-Ihg"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="YlT-dt-Cga"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2r7-Kw-KsV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1798.5" y="1953.5"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="VZA-xg-HUm"/>
-        <segue reference="OXi-xv-XVG"/>
+        <segue reference="t2K-Ls-Z5m"/>
         <segue reference="LH2-SX-tA9"/>
     </inferredMetricsTieBreakers>
 </document>

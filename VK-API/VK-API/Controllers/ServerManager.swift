@@ -23,6 +23,24 @@ class ServerManager: NSObject {
         return manager
     }
     
+    public func delay(bySeconds seconds: Double, dispatchLevel: DispatchLevel = .main, closure: @escaping () -> Void) {
+        let dispatchTime = DispatchTime.now() + seconds
+        dispatchLevel.dispatchQueue.asyncAfter(deadline: dispatchTime, execute: closure)
+    }
+    
+    public enum DispatchLevel {
+        case main, userInteractive, userInitiated, utility, background
+        var dispatchQueue: DispatchQueue {
+            switch self {
+            case .main:                 return DispatchQueue.main
+            case .userInteractive:      return DispatchQueue.global(qos: .userInteractive)
+            case .userInitiated:        return DispatchQueue.global(qos: .userInitiated)
+            case .utility:              return DispatchQueue.global(qos: .utility)
+            case .background:           return DispatchQueue.global(qos: .background)
+            }
+        }
+    }
+    
     override init() {
         super.init()
         loadSettings()
@@ -164,21 +182,23 @@ class ServerManager: NSObject {
             switch response.result {
             case .success(_) :
                 let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
-                for  arr in array! {
-                    
-                    user = User(arr: arr)
-                    
-                    if let city = arr["city"] as? [String: Any] {
-                        user.cityName = city["title"]! as? String
-                    }
-                    
-                    if let country = arr["country"] as? [String: Any] {
-                        user.countryName = country["title"]! as? String
-                    }
-                    
-                    if let count = arr["counters"] as? [String: Any] {
-                        counters = UserCounters(arr: count)
-                        user.countFriends = count["friends"] as? Int
+                if array != nil {
+                    for  arr in array! {
+                        
+                        user = User(arr: arr)
+                        
+                        if let city = arr["city"] as? [String: Any] {
+                            user.cityName = city["title"]! as? String
+                        }
+                        
+                        if let country = arr["country"] as? [String: Any] {
+                            user.countryName = country["title"]! as? String
+                        }
+                        
+                        if let count = arr["counters"] as? [String: Any] {
+                            counters = UserCounters(arr: count)
+                            user.countFriends = count["friends"] as? Int
+                        }
                     }
                     
                    /* self.getCityUser(
@@ -206,6 +226,38 @@ class ServerManager: NSObject {
        /* group.notify(queue: DispatchQueue.main) {
             onSuccess(user)
         }*/
+    }
+    
+    public func getGroupByID(groupId: String,
+                             onSuccess: @escaping (_ group : VideoInGroup) -> Void,
+                             onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
+        
+        let dictionary = ["group_id":    groupId,
+                          //"fields":     "photo_200,city,sex,bdate,city,country,online,education,counters",
+                          //"name_case":  "nom",
+                          "v":          "5.73",
+                          "access_token": accessToken.token!] as [String : Any]
+        //DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        //DispatchQueue.main.asyncAfter(deadline: .now() + 5, qos: .background, flags: .barrier){
+        //delay(bySeconds: 1.5, dispatchLevel: .background) {
+            delay(bySeconds: 0.5) {
+            request("https://api.vk.com/method/groups.getById", method: .get, parameters: dictionary).responseJSON {
+                (response) in
+                switch response.result {
+                case .success(_) :
+                    var group = VideoInGroup()
+                    let array = (response.result.value as? [String: Any])?["response"] as? [[String: Any]]
+                    if array != nil {
+                        for  arr in array! {
+                            group = VideoInGroup(arr: arr)
+                        }
+                    }
+                    onSuccess(group)
+                case .failure(let error) :
+                    onFailure(error, (response.response?.statusCode)!)
+                }
+            }
+        }
     }
     
     public func getWallPostsWithOffset(offset: NSInteger,
@@ -302,7 +354,7 @@ class ServerManager: NSObject {
     public func getVideoUsers(offset: NSInteger,
                               count: NSInteger,
                               userId: Int,
-                              onSuccess: @escaping (_ videos : Array<Video>, _ videosInGroup: Array<VideoInGroup>) -> Void,
+                              onSuccess: @escaping (_ videos : Array<Video>) -> Void,
                               onFailure: @escaping (_ error: Error, _ statusCode: NSInteger) -> Void) {
         
         let dictionary = ["owner_id":   userId,
@@ -317,23 +369,14 @@ class ServerManager: NSObject {
             switch response.result {
             case .success(_) :
                 var videos = Array<Video>()
-                var array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
+                let array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["items"] as? [[String: Any]]
                 if array != nil {
                     for arr in array! {
                         let video = Video(arr: arr)
                         videos.append(video)
                     }
                 }
-                
-                var videosInGroup = Array<VideoInGroup>()
-                array = ((response.result.value as? [String: Any])?["response"] as? [String: Any])?["groups"] as? [[String: Any]]
-                if array != nil {
-                    for arr in array! {
-                        let videoInGroup = VideoInGroup(arr: arr)
-                        videosInGroup.append(videoInGroup)
-                    }
-                }
-                onSuccess(videos, videosInGroup)
+                onSuccess(videos)
             case .failure(let error): onFailure(error, (response.response?.statusCode)!)
             }
         }
